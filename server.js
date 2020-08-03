@@ -1,19 +1,13 @@
 // Require the framework and instantiate it
 const fastify = require('fastify')({ logger: true })
-
-// Declare a route
-fastify.get('/', async (request, reply) => {
-  return { hello: 'world' }
-})
+const PORT = 5000 || process.env.PORT
 
 // Run the server!
-const start = async () => {
-  try {
-    await fastify.listen(3000)
-    fastify.log.info(`server listening on ${fastify.server.address().port}`)
-  } catch (err) {
-    fastify.log.error(err)
+fastify.listen(5000, (err, address)=>{
+  if (err){
+    console.log(err)
     process.exit(1)
+  } else {
+    console.log(`Server running on port ${PORT}`)
   }
-}
-start()
+})
