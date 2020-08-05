@@ -3,6 +3,30 @@ const PORT = 5000 || process.env.PORT
 fastify.register(require('fastify-routes'))
 
 const stack = []
+
+const postOptions = {
+  schema: {
+    body: {
+      type: 'object',
+      additionalProperties: false,
+      required: [
+        'value'
+      ],
+      properties: {
+        value: { type: 'string' }
+      }
+    },
+    response: {
+      201: {
+        type: 'object',
+        properties: {
+          value: { type: 'number' }
+        }
+      }
+    }
+  }
+}
+
 //@Routes
 fastify.get('/getStack', (request, reply) => {
   reply.send(stack)
@@ -13,7 +37,8 @@ fastify.get('/', (request, reply) => {
   console.log(fastify.routes)
 })
 
-fastify.post('/addValue', (request, reply) => {
+fastify.post('/addValue', postOptions, (request, reply) => {
+  reply.code(201)
   value = request.body.value
   stack.push(value)
   reply.send(stack)
