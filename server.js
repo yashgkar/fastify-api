@@ -1,11 +1,16 @@
 const fastify = require('fastify')({ logger: true })
-fastify.register(require('fastify-cors'))
 const PORT = 5000 || process.env.PORT
+fastify.register(require('fastify-routes'))
 
 const stack = []
 //@Routes
-fastify.get('/', (request, reply) => {
+fastify.get('/getStack', (request, reply) => {
   reply.send(stack)
+})
+
+fastify.get('/', (request, reply) => {
+  reply.send('Welcome to Fastify REST-API!')
+  console.log(fastify.routes)
 })
 
 fastify.post('/addValue', (request, reply) => {
@@ -36,5 +41,6 @@ fastify.listen(5000, (err) => {
     process.exit(1)
   } else {
     console.log(`Server running, navigate to  https://localhost:${PORT}`)
+
   }
 })
