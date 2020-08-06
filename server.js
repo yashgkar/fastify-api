@@ -16,6 +16,14 @@ const postOptions = {
       properties: {
         value: { type: 'string' }
       }
+    },
+    response: {
+      201: {
+        type: 'object',
+        properties: {
+          value: { type: 'string' }
+        }
+      }
     }
   }
 }
@@ -36,6 +44,7 @@ const serializeSchema = {
 
 //@Routes
 fastify.get('/getStack', serializeSchema, (request, reply) => {
+  request.log.info('Retrieving stack..') //Sending stack retrival message
   reply.send(JSON.stringify(stack))
   console.log('Stack sent')
 })
@@ -46,7 +55,7 @@ fastify.get('/', (request, reply) => {
 })
 
 fastify.post('/addValue', postOptions, (request, reply) => {
-  request.log.info('Adding the element to the stack...')
+  request.log.info('Adding the element to the stack...') //Sending element push log
   reply.code(201)
   value = request.body.value
   stack.push(value)
@@ -54,9 +63,11 @@ fastify.post('/addValue', postOptions, (request, reply) => {
 })
 
 fastify.put('/getLocation', (request, reply) => {
+  request.log.info('Searching element location...') //Sending search info log
   findValue = request.body.value
   //check if value exists
   if (stack.indexOf(findValue) === -1) {
+    request.log.error('No such element exists!') //Sending an error log 
     reply.send('Err: No such element found! Please check values')
   } else {
     reply.send(stack.indexOf(findValue))
@@ -64,7 +75,7 @@ fastify.put('/getLocation', (request, reply) => {
 })
 
 fastify.delete('/popElement', (request, reply) => {
-  request.log.info('Removing the top-most element in the stack...')
+  request.log.warn('Removing the top-most element in the stack...') //Warning of removal of top-most element
   stack.pop()
   reply.send(stack)
 })
