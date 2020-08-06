@@ -4,6 +4,7 @@ fastify.register(require('fastify-routes'))
 
 const stack = []
 
+//@Validation Schema
 const postOptions = {
   schema: {
     body: {
@@ -15,12 +16,18 @@ const postOptions = {
       properties: {
         value: { type: 'string' }
       }
-    },
+    }
+  }
+}
+
+//@Serialization Schema
+const serializeSchema = {
+  schema: {
     response: {
-      201: {
+      200: {
         type: 'object',
         properties: {
-          value: { type: 'number' }
+          stack: { type: 'array' }
         }
       }
     }
@@ -28,8 +35,9 @@ const postOptions = {
 }
 
 //@Routes
-fastify.get('/getStack', (request, reply) => {
-  reply.send(stack)
+fastify.get('/getStack', serializeSchema, (request, reply) => {
+  reply.send(JSON.stringify(stack))
+  console.log('Stack sent')
 })
 
 fastify.get('/', (request, reply) => {
@@ -38,6 +46,7 @@ fastify.get('/', (request, reply) => {
 })
 
 fastify.post('/addValue', postOptions, (request, reply) => {
+  request.log.info('Adding the element to the stack...')
   reply.code(201)
   value = request.body.value
   stack.push(value)
@@ -55,6 +64,7 @@ fastify.put('/getLocation', (request, reply) => {
 })
 
 fastify.delete('/popElement', (request, reply) => {
+  request.log.info('Removing the top-most element in the stack...')
   stack.pop()
   reply.send(stack)
 })
@@ -66,6 +76,5 @@ fastify.listen(5000, (err) => {
     process.exit(1)
   } else {
     console.log(`Server running, navigate to  https://localhost:${PORT}`)
-
   }
 })
