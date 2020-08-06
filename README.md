@@ -1,4 +1,13 @@
-#Fastify-API
+# Fastify REST-API
 
-A Fastify REST-API made to understand how fastify works. 
-Access '/' and view terminal to understand the routes.
+> A simple REST API using Fastify.
+
+## Run
+Make sure to have `nodemon` as a global dependency.
+
+```bash
+    npm run dev
+```
+## Routes
+
+Access `'/'` route and watch terminal to get all routes.
